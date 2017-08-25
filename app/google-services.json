@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "171253587444",
+    "firebase_url": "https://biddingapp-d3306.firebaseio.com",
+    "project_id": "biddingapp-d3306",
+    "storage_bucket": "biddingapp-d3306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171253587444:android:5fc463808e9ba93b",
+        "android_client_info": {
+          "package_name": "com.example.hamid_pc.biddingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171253587444-bm8s9r436s6ocvcn4o9dko21tqf79kbn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hamid_pc.biddingapp",
+            "certificate_hash": "fbd87f19bf2c9c1e5a207d98914840717886177a"
+          }
+        },
+        {
+          "client_id": "171253587444-8url8s79quqvq6tkuhgkktne4qkdsgg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxlZfWyUyw_p-cIRxseABje2_gDJP6HPA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171253587444-8url8s79quqvq6tkuhgkktne4qkdsgg5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
