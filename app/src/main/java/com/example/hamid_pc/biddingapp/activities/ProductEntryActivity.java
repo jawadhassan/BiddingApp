@@ -12,7 +12,6 @@ public class ProductEntryActivity extends SingleFragmentActivity {
 
     public static Intent start(Context context) {
         Intent starter = new Intent(context, ProductEntryActivity.class);
-        context.startActivity(starter);
         return starter;
     }
 
