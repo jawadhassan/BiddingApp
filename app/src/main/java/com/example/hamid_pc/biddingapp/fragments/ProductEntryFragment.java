@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +101,9 @@ public class ProductEntryFragment extends Fragment {
         mDatabaseReference = mFirebaseDatabase.getReference("products");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mProductPhotosStorageReference = mFirebaseStorage.getReference().child("product_photos");
+
+
+
     }
 
     @Override
@@ -113,6 +118,12 @@ public class ProductEntryFragment extends Fragment {
         mPhotoPickerButton = (Button) view.findViewById(R.id.button_image_picker);
         mSubmitButton = (Button) view.findViewById(R.id.button_submit);
 
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.activity_toolbar);
+         AppCompatActivity appCompatActivity =  (AppCompatActivity) getActivity();
+        if (appCompatActivity != null) {
+            appCompatActivity.setSupportActionBar(toolbar);
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override

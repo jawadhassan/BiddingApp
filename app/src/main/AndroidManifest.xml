@@ -18,7 +18,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.NavigationActivity"/>
-        <activity android:name=".activities.ProductEntryActivity"/>
+        <activity android:name=".activities.ProductEntryActivity"
+                  android:parentActivityName="com.example.hamid_pc.biddingapp.activities.NavigationActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hamid_pc.biddingapp.activities.NavigationActivity" />
+
+
+        </activity>
 
     </application>
 
