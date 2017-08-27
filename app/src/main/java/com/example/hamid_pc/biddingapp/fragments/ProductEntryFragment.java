@@ -21,6 +21,8 @@ import com.example.hamid_pc.biddingapp.R;
 import com.example.hamid_pc.biddingapp.models.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +49,7 @@ public class ProductEntryFragment extends Fragment {
 
     private String mProductTitle;
     private String mProductDesc;
+    private String mSellerId;
     private String mBidAmount;
 
     private DateTime mDate;
@@ -66,6 +69,7 @@ public class ProductEntryFragment extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseRef;
+    private FirebaseUser mFirebaseUser;
     private String mProductId;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mProductPhotosStorageReference;
@@ -101,7 +105,8 @@ public class ProductEntryFragment extends Fragment {
         mDatabaseReference = mFirebaseDatabase.getReference("products");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mProductPhotosStorageReference = mFirebaseStorage.getReference().child("product_photos");
-
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mSellerId = mFirebaseUser.getUid();
 
 
     }
@@ -185,17 +190,14 @@ public class ProductEntryFragment extends Fragment {
                         mDatabaseRef = mDatabaseReference.push().getRef();
                         mProductId = mDatabaseRef.getKey();
                         Product product = new
-                                Product(mProductId,mProductTitle,mProductDesc,downloadUrl.toString());
+                                Product(mProductId,mProductTitle,mProductDesc,downloadUrl.toString(),mSellerId,"");
                         mDatabaseRef.setValue(product);
-
-
 
 
                     }
 
 
                 });
-
 
 
             }

@@ -2,52 +2,82 @@ package com.example.hamid_pc.biddingapp.models;
 
 
 public class Product {
-    private String productUid;
-    private String productTitle;
-    private String productDescription;
-    private String photoUrl;
+    private String mProductUid;
+    private String mProductTitle;
+    private String mProductDescription;
+    private String mPhotoUrl;
+    private String mSellerId;
+    private String mBuyerId;
+    private Boolean mSold;
 
 
     public Product() {
     }
 
-    public Product(String productUid, String productTitle, String productDescription, String photoUrl) {
-        this.productUid = productUid;
-        this.productTitle = productTitle;
-        this.productDescription = productDescription;
-        this.photoUrl = photoUrl;
+
+    public Product(String productUid, String productTitle, String productDescription, String photoUrl, String sellerId, String buyerId) {
+        mProductUid = productUid;
+        mProductTitle = productTitle;
+        mProductDescription = productDescription;
+        mPhotoUrl = photoUrl;
+        mSellerId = sellerId;
+        mBuyerId = buyerId;
+        mSold = false;
     }
 
-
     public String getProductUid() {
-        return productUid;
+        return mProductUid;
     }
 
     public void setProductUid(String productUid) {
-        this.productUid = productUid;
+        mProductUid = productUid;
     }
 
     public String getProductTitle() {
-        return productTitle;
+        return mProductTitle;
     }
 
     public void setProductTitle(String productTitle) {
-        this.productTitle = productTitle;
+        mProductTitle = productTitle;
     }
 
     public String getProductDescription() {
-        return productDescription;
+        return mProductDescription;
     }
 
     public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
+        mProductDescription = productDescription;
     }
 
     public String getPhotoUrl() {
-        return photoUrl;
+        return mPhotoUrl;
     }
 
     public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+        mPhotoUrl = photoUrl;
+    }
+
+    public String getSellerId() {
+        return mSellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        mSellerId = sellerId;
+    }
+
+    public String getBuyerId() {
+        return mBuyerId;
+    }
+
+    public void setBuyerId(String buyerId) {
+        mBuyerId = buyerId;
+    }
+
+    public Boolean getSold() {
+        return mSold;
+    }
+
+    public void setSold(Boolean sold) {
+        mSold = sold;
     }
 }

@@ -12,7 +12,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
+
 
 
 public class ProductListAdapter  {

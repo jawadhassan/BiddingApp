@@ -66,7 +66,7 @@ public class BuyProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_buy_product_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Query query = mDatabaseReference;
+        Query query = mDatabaseReference.orderByChild("sold").equalTo(false);
         ProductListAdapter productListAdapter = new ProductListAdapter(query,getActivity());
         RecyclerView.Adapter adapter = productListAdapter.getAdapter();
         mRecyclerView.setAdapter(adapter);

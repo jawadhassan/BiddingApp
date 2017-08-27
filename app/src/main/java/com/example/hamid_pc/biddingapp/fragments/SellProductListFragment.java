@@ -5,32 +5,47 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.hamid_pc.biddingapp.FirebaseRecyclerViewAdapters.ProductListAdapter;
 import com.example.hamid_pc.biddingapp.R;
 import com.example.hamid_pc.biddingapp.activities.ProductEntryActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 
 public class SellProductListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private FloatingActionButton mFAB;
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView mRecyclerView;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
+
+    private String mSellerId;
+    private Query mQuery;
+
 
 
     public SellProductListFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
+
     public static SellProductListFragment newInstance(String param1, String param2) {
         SellProductListFragment fragment = new SellProductListFragment();
         Bundle args = new Bundle();
@@ -47,6 +62,9 @@ public class SellProductListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference("products");
+        mSellerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @Override
@@ -55,6 +73,13 @@ public class SellProductListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_selling_product_list, container, false);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fab);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Query query = mDatabaseReference.orderByChild("sellerId").equalTo(mSellerId);
+        ProductListAdapter productListAdapter = new ProductListAdapter(query,getActivity());
+        RecyclerView.Adapter adapter = productListAdapter.getAdapter();
+        mRecyclerView.setAdapter(adapter);
+
 
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
