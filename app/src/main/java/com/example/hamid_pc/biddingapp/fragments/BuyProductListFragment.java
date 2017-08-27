@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.hamid_pc.biddingapp.FirebaseRecyclerViewAdapters.ProductListAdapter;
 import com.example.hamid_pc.biddingapp.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -65,6 +66,10 @@ public class BuyProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_buy_product_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Query query = mDatabaseReference;
+        ProductListAdapter productListAdapter = new ProductListAdapter(query,getActivity());
+        RecyclerView.Adapter adapter = productListAdapter.getAdapter();
+        mRecyclerView.setAdapter(adapter);
 
 
         return view;

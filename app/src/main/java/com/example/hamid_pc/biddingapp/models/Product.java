@@ -8,6 +8,9 @@ public class Product {
     private String photoUrl;
 
 
+    public Product() {
+    }
+
     public Product(String productUid, String productTitle, String productDescription, String photoUrl) {
         this.productUid = productUid;
         this.productTitle = productTitle;
