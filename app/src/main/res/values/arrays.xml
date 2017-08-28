@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="product_titles">
+        <item>Android</item>
+        <item>iPhone</item>
+        <item>Windows</item>
+    </string-array>
+
+
+</resources>

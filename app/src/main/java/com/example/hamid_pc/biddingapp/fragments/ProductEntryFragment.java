@@ -14,10 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.hamid_pc.biddingapp.R;
+import com.example.hamid_pc.biddingapp.models.Auction;
 import com.example.hamid_pc.biddingapp.models.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +37,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import static org.joda.time.DateTimeZone.UTC;
+
 public class ProductEntryFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -41,16 +47,24 @@ public class ProductEntryFragment extends Fragment {
     private EditText mProductTitleField;
     private EditText mProductDescriptionField;
     private EditText mProductBidAmountField;
+    private EditText mHourPickerText;
     private Button mTimePickerButton;
     private Button mDatePickerButton;
     private Button mPhotoPickerButton;
+    private Spinner mProductTypeSpinner;
     private Button mSubmitButton;
 
 
     private String mProductTitle;
     private String mProductDesc;
     private String mSellerId;
-    private String mBidAmount;
+    private String mProductType;
+    private String mOwnerId_ProductType_Sold;
+    private int mBidAmount;
+    private int mHour;
+    private Long mDateInMilli;
+    private Long mEndDateInMilli;
+
 
     private DateTime mDate;
     private DateTime mDateTime;
@@ -68,9 +82,12 @@ public class ProductEntryFragment extends Fragment {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+    private DatabaseReference mAuctionReference;
+    private DatabaseReference mAuctionRef;
     private DatabaseReference mDatabaseRef;
     private FirebaseUser mFirebaseUser;
     private String mProductId;
+    private String mAuctionId;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mProductPhotosStorageReference;
 
@@ -103,6 +120,7 @@ public class ProductEntryFragment extends Fragment {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference("products");
+        mAuctionReference = mFirebaseDatabase.getReference("auctions");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mProductPhotosStorageReference = mFirebaseStorage.getReference().child("product_photos");
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -118,9 +136,28 @@ public class ProductEntryFragment extends Fragment {
         mProductTitleField = (EditText) view.findViewById(R.id.product_title);
         mProductDescriptionField = (EditText) view.findViewById(R.id.product_description);
         mProductBidAmountField = (EditText) view.findViewById(R.id.product_min_bid_amount);
+        mHourPickerText = (EditText) view.findViewById(R.id.num_of_hour);
         mDatePickerButton = (Button) view.findViewById(R.id.button_date_picker);
         mTimePickerButton = (Button) view.findViewById(R.id.button_time_picker);
         mPhotoPickerButton = (Button) view.findViewById(R.id.button_image_picker);
+        mProductTypeSpinner = (Spinner) view.findViewById(R.id.product_type_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.product_titles,android.R.layout.simple_spinner_item);
+
+        mProductTypeSpinner.setAdapter(adapter);
+        mProductTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                mProductType = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         mSubmitButton = (Button) view.findViewById(R.id.button_submit);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.activity_toolbar);
@@ -167,7 +204,7 @@ public class ProductEntryFragment extends Fragment {
             public void onClick(View v) {
                 mProductTitle = mProductTitleField.getText().toString();
                 mProductDesc = mProductDescriptionField.getText().toString();
-                mBidAmount = mProductBidAmountField.getText().toString();
+                mBidAmount = Integer.valueOf(mProductBidAmountField.getText().toString());
 
 
                 StorageReference photoRef =
@@ -189,10 +226,32 @@ public class ProductEntryFragment extends Fragment {
 
                         mDatabaseRef = mDatabaseReference.push().getRef();
                         mProductId = mDatabaseRef.getKey();
+                        mOwnerId_ProductType_Sold = mSellerId+mProductType+false;
                         Product product = new
-                                Product(mProductId,mProductTitle,mProductDesc,downloadUrl.toString(),mSellerId,"");
+                                Product(mProductId,mProductTitle,mProductDesc,
+                                downloadUrl.toString(),mSellerId,"",mBidAmount,
+                                mProductType,mOwnerId_ProductType_Sold,false);
                         mDatabaseRef.setValue(product);
 
+                        mAuctionRef = mAuctionReference.push().getRef();
+                        mAuctionId = mAuctionRef.getKey();
+
+
+
+                        //Taking Date Input from User,
+
+                        mHour = Integer.parseInt(mHourPickerText.getText().toString());
+                        mDate = mDate.hourOfDay().setCopy(mDateTime.getHourOfDay());
+                        mDate = mDate.minuteOfHour().setCopy(mDateTime.getMinuteOfHour());
+                        mDate = mDate.secondOfMinute().setCopy(mDateTime.getSecondOfMinute());
+                        mDateInMilli = mDate.toDateTime(UTC).getMillis();
+                        mEndDateInMilli = mDate.plusHours(mHour).toDateTime(UTC).getMillis();
+
+                        Auction auction = new Auction(mAuctionId,mProductId,mSellerId,"",
+                                mBidAmount,0,mDateInMilli,mEndDateInMilli);
+
+
+                        mAuctionRef.setValue(auction);
 
                     }
 
@@ -242,6 +301,10 @@ public class ProductEntryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+
+
+
 
 
 }

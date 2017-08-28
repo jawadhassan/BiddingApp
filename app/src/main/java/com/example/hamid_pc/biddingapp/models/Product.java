@@ -8,21 +8,28 @@ public class Product {
     private String mPhotoUrl;
     private String mSellerId;
     private String mBuyerId;
+    private int mMinBidAmount;
+    private String mProductType;
+    private String mOwnerId_ProductType_Sold;
     private Boolean mSold;
 
 
     public Product() {
     }
 
-
-    public Product(String productUid, String productTitle, String productDescription, String photoUrl, String sellerId, String buyerId) {
+    public Product(String productUid, String productTitle, String productDescription,
+                   String photoUrl, String sellerId, String buyerId, int minBidAmount,
+                   String productType, String ownerId_ProductType_Sold, Boolean sold) {
         mProductUid = productUid;
         mProductTitle = productTitle;
         mProductDescription = productDescription;
         mPhotoUrl = photoUrl;
         mSellerId = sellerId;
         mBuyerId = buyerId;
-        mSold = false;
+        mMinBidAmount = minBidAmount;
+        mProductType = productType;
+        mOwnerId_ProductType_Sold = ownerId_ProductType_Sold;
+        mSold = sold;
     }
 
     public String getProductUid() {
@@ -79,5 +86,29 @@ public class Product {
 
     public void setSold(Boolean sold) {
         mSold = sold;
+    }
+
+    public int getMinBidAmount() {
+        return mMinBidAmount;
+    }
+
+    public void setMinBidAmount(int minBidAmount) {
+        mMinBidAmount = minBidAmount;
+    }
+
+    public String getProductType() {
+        return mProductType;
+    }
+
+    public void setProductType(String productType) {
+        mProductType = productType;
+    }
+
+    public String getOwnerId_ProductType_Sold() {
+        return mOwnerId_ProductType_Sold;
+    }
+
+    public void setOwnerId_ProductType_Sold(String ownerId_ProductType_Sold) {
+        mOwnerId_ProductType_Sold = ownerId_ProductType_Sold;
     }
 }
