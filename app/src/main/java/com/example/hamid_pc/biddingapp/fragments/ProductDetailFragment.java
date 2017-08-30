@@ -6,31 +6,42 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.hamid_pc.biddingapp.R;
+import com.example.hamid_pc.biddingapp.models.Auctioneer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class ProductDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_PRODUCT_ID = "product_id";
+
+
+    private Button mSubmitButton;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
+    private FirebaseUser mFirebaseUser;
+    private String mUserId;
+    private String mUserName;
+    private String mUserEmail;
+
+
+    private String mProductId;
 
 
     public ProductDetailFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static ProductDetailFragment newInstance(String param1, String param2) {
+
+    public static ProductDetailFragment newInstance(String productId) {
         ProductDetailFragment fragment = new ProductDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PRODUCT_ID, productId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,19 +50,41 @@ public class ProductDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mProductId = getArguments().getString(ARG_PRODUCT_ID);
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
+            mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            mDatabaseReference = mFirebaseDatabase.getReference(mProductId);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detail, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
+
+        mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mUserId = mFirebaseUser.getUid();
+                mUserName = mFirebaseUser.getDisplayName();
+                mUserEmail = mFirebaseUser.getEmail();
+
+                Auctioneer auctioneer = new Auctioneer(mUserId, mUserEmail, mUserName);
+                mDatabaseReference.push().setValue(auctioneer);
+
+
+            }
+        });
+
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 
     @Override
     public void onAttach(Context context) {

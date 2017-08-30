@@ -69,6 +69,7 @@ public class BuyProductListFragment extends Fragment {
         Query query = mDatabaseReference.orderByChild("sold").equalTo(false);
         ProductListAdapter productListAdapter = new ProductListAdapter(query,getActivity());
         RecyclerView.Adapter adapter = productListAdapter.getAdapter();
+
         mRecyclerView.setAdapter(adapter);
 
 
