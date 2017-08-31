@@ -13,9 +13,10 @@ import android.view.ViewGroup;
 
 import com.example.hamid_pc.biddingapp.FirebaseRecyclerViewAdapters.ProductListAdapter;
 import com.example.hamid_pc.biddingapp.R;
+import com.example.hamid_pc.biddingapp.ViewHolders.BuyProductViewHolder;
 import com.example.hamid_pc.biddingapp.activities.ProductEntryActivity;
+import com.example.hamid_pc.biddingapp.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -76,9 +77,15 @@ public class SellProductListFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query = mDatabaseReference.orderByChild("sellerId").equalTo(mSellerId);
-        ProductListAdapter productListAdapter = new ProductListAdapter(query,getActivity());
-        RecyclerView.Adapter adapter = productListAdapter.getAdapter();
-        mRecyclerView.setAdapter(adapter);
+        ProductListAdapter productListAdapter = new ProductListAdapter(
+                Product.class,
+                R.layout.list_item_product,
+                BuyProductViewHolder.class,
+                query,
+                getActivity()
+        );
+
+        mRecyclerView.setAdapter(productListAdapter);
 
 
         mFAB.setOnClickListener(new View.OnClickListener() {
