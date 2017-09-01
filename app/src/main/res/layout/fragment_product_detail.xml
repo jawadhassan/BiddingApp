@@ -57,11 +57,19 @@
             android:id="@+id/text_view_product_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_horizontal_padding"
+            android:paddingBottom="@dimen/activity_horizontal_padding"/>
 
-            />
+        <TextView
+            android:id="@+id/text_view_auction_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_horizontal_padding"/>
 
-
+        <TextView
+            android:id="@+id/text_view_auction_end_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_horizontal_padding"/>
 
         <Button
             android:id="@+id/button_submit_bid"

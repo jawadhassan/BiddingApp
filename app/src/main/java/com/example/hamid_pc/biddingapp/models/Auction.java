@@ -12,8 +12,12 @@ public class Auction {
     private long mBidStartDate;
     private long mBidEndDate;
 
+
+    public Auction() {
+    }
+
     public Auction(String auctionId, String productId, String sellerId, String buyerId,
-                   int minBid, int bidClosingAmount, long bidStartDate,long bidEndDate) {
+                   int minBid, int bidClosingAmount, long bidStartDate, long bidEndDate) {
         mAuctionId = auctionId;
         mProductId = productId;
         mSellerId = sellerId;

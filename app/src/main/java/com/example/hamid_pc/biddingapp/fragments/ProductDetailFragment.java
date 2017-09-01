@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hamid_pc.biddingapp.R;
+import com.example.hamid_pc.biddingapp.models.Auction;
 import com.example.hamid_pc.biddingapp.models.Auctioneer;
 import com.example.hamid_pc.biddingapp.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,36 +23,45 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 
 public class ProductDetailFragment extends Fragment {
 
     private static final String ARG_PRODUCT_ID = "product_id";
     private static final String ARG_BUYER = "buyer";
-    private static final String ARG_PRODUCT_TITLE = "product_title";
-    private static final String ARG_PRODUCT_DESC = "product_desc";
-    private static final String ARG_PRODUCT_AMOUNT = "product_amount";
-    private static final String ARG_PRODUCT_TYPE = "product_type";
-    private static final String ARG_PHOTO_URL = "photo_url";
 
 
-    private Button mSubmitButton;
+
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
-    private DatabaseReference mBookingReference;
+    private DatabaseReference mProductReference;
+    private DatabaseReference mAuctionReference;
     private FirebaseUser mFirebaseUser;
-    private String mUserId;
-    private String mUserName;
-    private String mUserEmail;
-    private Boolean mBuyer;
+
+
     private TextView mProductTitleView;
     private TextView mProductDescView;
     private TextView mProductPriceView;
     private TextView mProductTypeView;
+    private TextView mAuctionStartDateView;
+    private TextView mAuctionEndDateView;
     private ImageView mThumbnail;
+    private Button mSubmitButton;
 
 
-
+    private String mUserId;
+    private String mUserName;
+    private String mUserEmail;
     private String mProductId;
+    private String mAuctionId;
+    private Boolean mBuyer;
+    private Long mStartDateInMillis;
+    private Long mEndDateInMillis;
+    private DateTime mStartDate;
+    private DateTime mEndDate;
 
 
     public ProductDetailFragment() {
@@ -80,7 +90,8 @@ public class ProductDetailFragment extends Fragment {
             mUserName = mFirebaseUser.getDisplayName();
             mUserEmail = mFirebaseUser.getEmail();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mDatabaseReference = mFirebaseDatabase.getReference("products");
+            mProductReference = mFirebaseDatabase.getReference("products");
+            mAuctionReference = mFirebaseDatabase.getReference("auctions");
 
 
 
@@ -99,9 +110,12 @@ public class ProductDetailFragment extends Fragment {
         mProductDescView = (TextView) view.findViewById(R.id.text_view_product_description);
         mProductPriceView = (TextView) view.findViewById(R.id.text_view_min_bid);
         mProductTypeView = (TextView) view.findViewById(R.id.text_view_product_type);
+        mAuctionStartDateView = (TextView) view.findViewById(R.id.text_view_auction_start_date);
+        mAuctionEndDateView = (TextView) view.findViewById(R.id.text_view_auction_end_date);
+
         mThumbnail = (ImageView) view.findViewById(R.id.image_view_product);
 
-        mDatabaseReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
+        mProductReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Product product = dataSnapshot.getValue(Product.class);
@@ -137,6 +151,49 @@ public class ProductDetailFragment extends Fragment {
         });
 
 
+        mAuctionReference.orderByChild("productId").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Auction auction = dataSnapshot.getValue(Auction.class);
+                mStartDateInMillis = auction.getBidStartDate();
+                mEndDateInMillis = auction.getBidEndDate();
+                mAuctionId = auction.getAuctionId();
+
+                DateTime startDateTime = new DateTime(Long.valueOf(mStartDateInMillis), DateTimeZone.UTC);
+                DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("d MMMM, yyyy");
+                String strDate = startDateTime.toString(dateTimeFormatter);
+
+                mAuctionStartDateView.setText(strDate);
+
+                DateTime endDateTime = new DateTime(Long.valueOf(mEndDateInMillis), DateTimeZone.UTC);
+                dateTimeFormatter = DateTimeFormat.forPattern("d MMMM, yyyy");
+                String endDate = endDateTime.toString(dateTimeFormatter);
+
+                mAuctionEndDateView.setText(endDate);
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         /**/
 
         mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
@@ -147,7 +204,7 @@ public class ProductDetailFragment extends Fragment {
 
 
                 Auctioneer auctioneer = new Auctioneer(mUserId, mUserEmail, mUserName);
-                mBookingReference.push().setValue(auctioneer);
+                //mBookingReference.push().setValue(auctioneer);
 
 
             }
