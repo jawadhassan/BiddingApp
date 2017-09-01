@@ -1,21 +1,26 @@
 package com.example.hamid_pc.biddingapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.hamid_pc.biddingapp.FirebaseRecyclerViewAdapters.ProductListAdapter;
 import com.example.hamid_pc.biddingapp.R;
-import com.example.hamid_pc.biddingapp.ViewHolders.BuyProductViewHolder;
+import com.example.hamid_pc.biddingapp.activities.ProductDetailActivity;
 import com.example.hamid_pc.biddingapp.models.Product;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 
 public class BuyProductListFragment extends Fragment {
@@ -29,8 +34,13 @@ public class BuyProductListFragment extends Fragment {
     private DatabaseReference mDatabaseReference;
     private Query mQuery;
 
+    private DividerItemDecoration mDividerItemDecoration;
+
+
     private String mParam1;
     private String mParam2;
+
+    private FirebaseRecyclerAdapter<Product, ProductViewHolder> mAdapter;
 
 
     public BuyProductListFragment() {
@@ -68,22 +78,58 @@ public class BuyProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_buy_product_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Query query = mDatabaseReference.orderByChild("sold").equalTo(false);
-        ProductListAdapter productListAdapter = new ProductListAdapter(
-                Product.class,
-                R.layout.list_item_product,
-                BuyProductViewHolder.class,
-                query,
-                getActivity()
-        );
+        mQuery = mDatabaseReference.orderByChild("sold").equalTo(false);
+        UpdateUI();
 
 
-        mRecyclerView.setAdapter(productListAdapter);
+        mDividerItemDecoration = new DividerItemDecoration(getContext(),
+                new LinearLayoutManager(getContext()).getOrientation());
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
+
+        mRecyclerView.setAdapter(mAdapter);
 
 
         return view;
     }
 
+
+    public void UpdateUI() {
+
+        mAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(
+                Product.class,
+                R.layout.list_item_product,
+                ProductViewHolder.class,
+                mQuery
+
+        ) {
+            @Override
+            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+
+                final Product product = getItem(position);
+                viewHolder.mProductTitle.setText(product.getProductTitle());
+                viewHolder.mProductDescription.setText(product.getProductDescription());
+                viewHolder.bindView(product);
+                Picasso.with(getActivity())
+                        .load(model.getPhotoUrl())
+                        .into(viewHolder.mThumbnail);
+
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = ProductDetailActivity.NewIntent(getActivity(), product.getProductUid(), true);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+
+
+        };
+
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -93,5 +139,28 @@ public class BuyProductListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+
+        public Product mProduct;
+        public TextView mProductTitle;
+        public TextView mProductDescription;
+
+        public ImageView mThumbnail;
+
+        public ProductViewHolder(View itemView) {
+            super(itemView);
+            mProductTitle = (TextView) itemView.findViewById(R.id.product_title);
+            mProductDescription = (TextView) itemView.findViewById(R.id.product_description);
+            mThumbnail = (ImageView) itemView.findViewById(R.id.list_image);
+
+        }
+
+
+        public void bindView(Product product) {
+            mProduct = product;
+        }
     }
 }
