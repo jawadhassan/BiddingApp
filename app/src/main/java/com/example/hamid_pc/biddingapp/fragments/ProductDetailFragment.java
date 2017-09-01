@@ -3,6 +3,7 @@ package com.example.hamid_pc.biddingapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,14 @@ public class ProductDetailFragment extends Fragment {
 
     private static final String ARG_PRODUCT_ID = "product_id";
     private static final String ARG_BUYER = "buyer";
-
-
-
+    private final String TAG = "ProductDetailFragment";
+    Product mProduct;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mProductReference;
     private DatabaseReference mAuctionReference;
+    private DatabaseReference mAuctioneerReference;
+    private DatabaseReference mBookingReference;
     private FirebaseUser mFirebaseUser;
-
-
     private TextView mProductTitleView;
     private TextView mProductDescView;
     private TextView mProductPriceView;
@@ -50,19 +50,17 @@ public class ProductDetailFragment extends Fragment {
     private TextView mAuctionEndDateView;
     private ImageView mThumbnail;
     private Button mSubmitButton;
-
-
     private String mUserId;
     private String mUserName;
     private String mUserEmail;
     private String mProductId;
     private String mAuctionId;
     private Boolean mBuyer;
+    private Boolean mBidEarlier = false;
     private Long mStartDateInMillis;
     private Long mEndDateInMillis;
     private DateTime mStartDate;
     private DateTime mEndDate;
-
 
     public ProductDetailFragment() {
         // Required empty public constructor
@@ -92,6 +90,7 @@ public class ProductDetailFragment extends Fragment {
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mProductReference = mFirebaseDatabase.getReference("products");
             mAuctionReference = mFirebaseDatabase.getReference("auctions");
+            mBookingReference = mFirebaseDatabase.getReference("booking").child(mUserId);
 
 
 
@@ -112,20 +111,28 @@ public class ProductDetailFragment extends Fragment {
         mProductTypeView = (TextView) view.findViewById(R.id.text_view_product_type);
         mAuctionStartDateView = (TextView) view.findViewById(R.id.text_view_auction_start_date);
         mAuctionEndDateView = (TextView) view.findViewById(R.id.text_view_auction_end_date);
+        mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
 
         mThumbnail = (ImageView) view.findViewById(R.id.image_view_product);
+
+
+        if (!mBuyer || !mBidEarlier) {
+            mSubmitButton.setVisibility(View.GONE);
+        } else {
+            mSubmitButton.setVisibility(View.VISIBLE);
+        }
 
         mProductReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Product product = dataSnapshot.getValue(Product.class);
-                mProductTitleView.setText(product.getProductTitle());
-                mProductDescView.setText(product.getProductDescription());
-                mProductTypeView.setText(product.getProductType());
-                mProductPriceView.setText(getResources().getString(R.string.product_amount, product.getMinBidAmount()));
+                mProduct = dataSnapshot.getValue(Product.class);
+                mProductTitleView.setText(mProduct.getProductTitle());
+                mProductDescView.setText(mProduct.getProductDescription());
+                mProductTypeView.setText(mProduct.getProductType());
+                mProductPriceView.setText(getResources().getString(R.string.product_amount, mProduct.getMinBidAmount()));
 
                 Picasso.with(getActivity())
-                        .load(product.getPhotoUrl())
+                        .load(mProduct.getPhotoUrl())
                         .into(mThumbnail);
             }
 
@@ -171,6 +178,8 @@ public class ProductDetailFragment extends Fragment {
 
                 mAuctionEndDateView.setText(endDate);
 
+                mAuctioneerReference = mFirebaseDatabase.getReference("auctioneer").child(auction.getAuctionId());
+
 
             }
 
@@ -194,17 +203,49 @@ public class ProductDetailFragment extends Fragment {
 
             }
         });
-        /**/
 
-        mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
+        mBookingReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                mBidEarlier = true;
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                Auctioneer auctioneer = new Auctioneer(mUserId, mUserEmail, mUserName);
-                //mBookingReference.push().setValue(auctioneer);
+                if (mAuctioneerReference != null && mProduct != null) {
+                    Auctioneer auctioneer = new Auctioneer(mUserId, mUserEmail, mUserName);
+                    mAuctioneerReference.push().setValue(auctioneer);
+                    mBookingReference.push().setValue(mProduct);
+                } else {
+                    Log.d(TAG, "Firebase Error found");
+                }
 
 
             }
@@ -214,15 +255,6 @@ public class ProductDetailFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mBuyer) {
-            mSubmitButton.setEnabled(true);
-        } else {
-            mSubmitButton.setEnabled(false);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
