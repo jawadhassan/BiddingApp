@@ -12,10 +12,15 @@ import android.widget.TextView;
 
 import com.example.hamid_pc.biddingapp.R;
 import com.example.hamid_pc.biddingapp.models.Auctioneer;
+import com.example.hamid_pc.biddingapp.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 
 public class ProductDetailFragment extends Fragment {
@@ -75,8 +80,8 @@ public class ProductDetailFragment extends Fragment {
             mUserName = mFirebaseUser.getDisplayName();
             mUserEmail = mFirebaseUser.getEmail();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mDatabaseReference = mFirebaseDatabase.getReference("auctions");
-            mBookingReference = mFirebaseDatabase.getReference("bookings").child(mUserId);
+            mDatabaseReference = mFirebaseDatabase.getReference("products");
+
 
 
         }
@@ -96,14 +101,43 @@ public class ProductDetailFragment extends Fragment {
         mProductTypeView = (TextView) view.findViewById(R.id.text_view_product_type);
         mThumbnail = (ImageView) view.findViewById(R.id.image_view_product);
 
-        /*mProductTitleView.setText(mProductTitle);
-        mProductDescView.setText(mProductDesc);
-        mProductTypeView.setText(mProductType);
-        mProductPriceView.setText(getResources().getString(R.string.product_amount, mProductAmount));
+        mDatabaseReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Product product = dataSnapshot.getValue(Product.class);
+                mProductTitleView.setText(product.getProductTitle());
+                mProductDescView.setText(product.getProductDescription());
+                mProductTypeView.setText(product.getProductType());
+                mProductPriceView.setText(getResources().getString(R.string.product_amount, product.getMinBidAmount()));
 
-        Picasso.with(getActivity())
-                .load(mPhotoUrl)
-                .into(mThumbnail);*/
+                Picasso.with(getActivity())
+                        .load(product.getPhotoUrl())
+                        .into(mThumbnail);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        /**/
 
         mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
 
@@ -113,7 +147,7 @@ public class ProductDetailFragment extends Fragment {
 
 
                 Auctioneer auctioneer = new Auctioneer(mUserId, mUserEmail, mUserName);
-                mDatabaseReference.push().setValue(auctioneer);
+                mBookingReference.push().setValue(auctioneer);
 
 
             }
