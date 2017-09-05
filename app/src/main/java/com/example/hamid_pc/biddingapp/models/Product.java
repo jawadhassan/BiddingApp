@@ -12,12 +12,13 @@ public class Product {
     private String mProductType;
     private String mOwnerId_ProductType_Sold;
     private Boolean mSold;
+    private String mAuctionId;
 
 
     public Product() {
     }
 
-    public Product(String productUid, String productTitle, String productDescription,
+    public Product(String productUid, String AuctionId, String productTitle, String productDescription,
                    String photoUrl, String sellerId, String buyerId, int minBidAmount,
                    String productType, String ownerId_ProductType_Sold, Boolean sold) {
         mProductUid = productUid;
@@ -30,6 +31,8 @@ public class Product {
         mProductType = productType;
         mOwnerId_ProductType_Sold = ownerId_ProductType_Sold;
         mSold = sold;
+        mAuctionId = AuctionId;
+
     }
 
     public String getProductUid() {
@@ -110,5 +113,13 @@ public class Product {
 
     public void setOwnerId_ProductType_Sold(String ownerId_ProductType_Sold) {
         mOwnerId_ProductType_Sold = ownerId_ProductType_Sold;
+    }
+
+    public String getAuctionId() {
+        return mAuctionId;
+    }
+
+    public void setAuctionId(String auctionId) {
+        mAuctionId = auctionId;
     }
 }

@@ -34,6 +34,7 @@ public class SellProductListFragment extends Fragment {
     private FloatingActionButton mFAB;
 
 
+
     private String mParam1;
     private String mParam2;
 
@@ -63,6 +64,7 @@ public class SellProductListFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,7 @@ public class SellProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_selling_product_list, container, false);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fab);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mQuery = mDatabaseReference.orderByChild("sold").equalTo(false);
         UpdateUI();
@@ -120,6 +123,7 @@ public class SellProductListFragment extends Fragment {
 
     public void UpdateUI() {
 
+
         mAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(
                 Product.class,
                 R.layout.list_item_product,
@@ -127,6 +131,8 @@ public class SellProductListFragment extends Fragment {
                 mQuery
 
         ) {
+
+
             @Override
             protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
 

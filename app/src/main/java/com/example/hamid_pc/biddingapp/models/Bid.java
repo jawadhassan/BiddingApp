@@ -7,12 +7,18 @@ public class Bid {
     private String mAuctionId;
     private String mProductId;
     private String mBidderId;
+    private String mBidderEmail;
 
-    public Bid(int bidAmount, String auctionId, String productId, String bidderId) {
+
+    public Bid() {
+    }
+
+    public Bid(int bidAmount, String auctionId, String productId, String bidderId, String bidderEmail) {
         mBidAmount = bidAmount;
         mAuctionId = auctionId;
         mProductId = productId;
         mBidderId = bidderId;
+        mBidderEmail = bidderEmail;
     }
 
     public int getBidAmount() {
@@ -45,5 +51,13 @@ public class Bid {
 
     public void setBidderId(String bidderId) {
         mBidderId = bidderId;
+    }
+
+    public String getBidderEmail() {
+        return mBidderEmail;
+    }
+
+    public void setBidderEmail(String bidderEmail) {
+        mBidderEmail = bidderEmail;
     }
 }

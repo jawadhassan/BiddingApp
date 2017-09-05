@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.example.hamid_pc.auctionapp.fragments.TimePickerFragment">
+             tools:context="com.example.hamid_pc.biddingapp.fragments.TimePickerFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

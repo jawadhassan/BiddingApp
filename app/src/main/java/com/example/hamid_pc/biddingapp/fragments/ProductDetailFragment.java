@@ -116,12 +116,6 @@ public class ProductDetailFragment extends Fragment {
         mThumbnail = (ImageView) view.findViewById(R.id.image_view_product);
 
 
-        if (!mBuyer || !mBidEarlier) {
-            mSubmitButton.setVisibility(View.GONE);
-        } else {
-            mSubmitButton.setVisibility(View.VISIBLE);
-        }
-
         mProductReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -250,6 +244,13 @@ public class ProductDetailFragment extends Fragment {
 
             }
         });
+
+
+        if (!mBuyer || mBidEarlier) {
+            mSubmitButton.setVisibility(View.GONE);
+        } else {
+            mSubmitButton.setVisibility(View.VISIBLE);
+        }
 
 
         return view;

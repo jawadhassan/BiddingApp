@@ -3,9 +3,7 @@ package com.example.hamid_pc.biddingapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,12 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.example.hamid_pc.biddingapp.R;
+import com.example.hamid_pc.biddingapp.fragments.BookingListFragment;
 import com.example.hamid_pc.biddingapp.fragments.BuyProductListFragment;
 import com.example.hamid_pc.biddingapp.fragments.SellProductListFragment;
 
@@ -47,8 +42,14 @@ public class NavigationActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (savedInstanceState == null) {
+            MenuItem item = navigationView.getMenu().getItem(0);
+            onNavigationItemSelected(item);
+        }
     }
 
     @Override
@@ -103,6 +104,10 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
+            BookingListFragment bookingListFragment = new BookingListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_navigation, bookingListFragment)
+                    .commit();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

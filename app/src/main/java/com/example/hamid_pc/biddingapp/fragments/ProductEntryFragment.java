@@ -43,7 +43,11 @@ public class ProductEntryFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "DialogTime";
+    private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
+    private static final int RC_PHOTO_PICKER = 2;
     private EditText mProductTitleField;
     private EditText mProductDescriptionField;
     private EditText mProductBidAmountField;
@@ -53,8 +57,6 @@ public class ProductEntryFragment extends Fragment {
     private Button mPhotoPickerButton;
     private Spinner mProductTypeSpinner;
     private Button mSubmitButton;
-
-
     private String mProductTitle;
     private String mProductDesc;
     private String mSellerId;
@@ -64,20 +66,9 @@ public class ProductEntryFragment extends Fragment {
     private int mHour;
     private Long mDateInMilli;
     private Long mEndDateInMilli;
-
-
     private DateTime mDate;
     private DateTime mDateTime;
-
     private String TAG = "ProductEntryActivity";
-
-    private static final String DIALOG_DATE = "DialogDate";
-    private static final String DIALOG_TIME = "DialogTime";
-    private static final int REQUEST_DATE = 0;
-    private static final int REQUEST_TIME = 1;
-    private static final int RC_PHOTO_PICKER = 2;
-
-
     private Uri mSelectedImageUri;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -226,15 +217,17 @@ public class ProductEntryFragment extends Fragment {
 
                         mDatabaseRef = mDatabaseReference.push().getRef();
                         mProductId = mDatabaseRef.getKey();
+
+                        mAuctionRef = mAuctionReference.push().getRef();
+                        mAuctionId = mAuctionRef.getKey();
+
                         mOwnerId_ProductType_Sold = mSellerId+mProductType+false;
                         Product product = new
-                                Product(mProductId,mProductTitle,mProductDesc,
+                                Product(mProductId, mAuctionId, mProductTitle, mProductDesc,
                                 downloadUrl.toString(),mSellerId,"",mBidAmount,
                                 mProductType,mOwnerId_ProductType_Sold,false);
                         mDatabaseRef.setValue(product);
 
-                        mAuctionRef = mAuctionReference.push().getRef();
-                        mAuctionId = mAuctionRef.getKey();
 
 
 

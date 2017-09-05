@@ -10,7 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.hamid_pc.biddingapp.R;
@@ -23,7 +26,7 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 
-public class BuyProductListFragment extends Fragment {
+public class BuyProductListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -39,6 +42,11 @@ public class BuyProductListFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private String TAG = "BuyProductListActivity";
+
+
+    private Spinner mSpinner;
 
     private FirebaseRecyclerAdapter<Product, ProductViewHolder> mAdapter;
 
@@ -71,6 +79,28 @@ public class BuyProductListFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String Type = parent.getItemAtPosition(position).toString();
+        if (Type.equalsIgnoreCase("Android")) {
+            mQuery = mDatabaseReference.orderByChild("productType").equalTo("Android");
+            mAdapter.cleanup();
+            UpdateUI();
+
+        } else {
+            mQuery = mDatabaseReference.orderByChild("productType").equalTo("iPhone");
+            mAdapter.cleanup();
+            UpdateUI();
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,7 +108,17 @@ public class BuyProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_buy_product_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mQuery = mDatabaseReference.orderByChild("sold").equalTo(false);
+        mQuery = mDatabaseReference.orderByChild("productType").equalTo("iPhone");
+        mSpinner = (Spinner) view.findViewById(R.id.products_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.product_titles, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mSpinner.setAdapter(adapter);
+        mSpinner.setOnItemSelectedListener(this);
+
         UpdateUI();
 
 
@@ -86,14 +126,13 @@ public class BuyProductListFragment extends Fragment {
                 new LinearLayoutManager(getContext()).getOrientation());
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
-        mRecyclerView.setAdapter(mAdapter);
-
 
         return view;
     }
 
 
     public void UpdateUI() {
+
 
         mAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(
                 Product.class,
@@ -128,6 +167,8 @@ public class BuyProductListFragment extends Fragment {
 
         };
 
+
+        mRecyclerView.setAdapter(mAdapter);
 
     }
 
