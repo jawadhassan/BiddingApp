@@ -10,8 +10,9 @@
 
         <Spinner
             android:id="@+id/products_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"/>
 
         <include layout="@layout/fragment_product_list"/>
 

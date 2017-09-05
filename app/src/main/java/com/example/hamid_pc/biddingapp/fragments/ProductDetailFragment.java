@@ -3,6 +3,8 @@ package com.example.hamid_pc.biddingapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,6 +116,14 @@ public class ProductDetailFragment extends Fragment {
         mSubmitButton = (Button) view.findViewById(R.id.button_submit_bid);
 
         mThumbnail = (ImageView) view.findViewById(R.id.image_view_product);
+
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.activity_toolbar);
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        if (appCompatActivity != null) {
+            appCompatActivity.setSupportActionBar(toolbar);
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 
         mProductReference.orderByChild("productUid").equalTo(mProductId).addChildEventListener(new ChildEventListener() {

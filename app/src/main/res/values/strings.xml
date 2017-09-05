@@ -17,6 +17,9 @@
     <string name="product_amount">%1$d$</string>
     <string name="label_submit_bid">Submit Bid</string>
     <string name="bidding_time_warning">Bidding will only be available at Time Set by Bidder</string>
+    <string name="nav_buy">Buy</string>
+    <string name="nav_sell">Sell</string>
+    <string name="nav_my_bookings">My Bookings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

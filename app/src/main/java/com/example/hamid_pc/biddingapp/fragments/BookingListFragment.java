@@ -89,6 +89,8 @@ public class BookingListFragment extends Fragment {
                 viewHolder.mProductDescription.setText(product.getProductDescription());
                 Picasso.with(getActivity())
                         .load(model.getPhotoUrl())
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .error(R.drawable.ic_error)
                         .into(viewHolder.mThumbnail);
 
 

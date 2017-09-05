@@ -142,6 +142,8 @@ public class SellProductListFragment extends Fragment {
                 viewHolder.bindView(product);
                 Picasso.with(getActivity())
                         .load(model.getPhotoUrl())
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .error(R.drawable.ic_error)
                         .into(viewHolder.mThumbnail);
 
 

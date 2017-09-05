@@ -90,19 +90,19 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_buy) {
             // Handle the camera action
             BuyProductListFragment buyProductListFragment = BuyProductListFragment.newInstance(null, null);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_navigation, buyProductListFragment)
                     .commit();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_sell) {
             SellProductListFragment sellProductListFragment = SellProductListFragment.newInstance(null, null);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_navigation, sellProductListFragment)
                     .commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_my_booking) {
 
             BookingListFragment bookingListFragment = new BookingListFragment();
             getSupportFragmentManager().beginTransaction()

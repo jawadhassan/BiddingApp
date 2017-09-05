@@ -4,8 +4,10 @@ package com.example.hamid_pc.biddingapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -43,6 +45,8 @@ public class BidOperationFragment extends Fragment {
     private FirebaseUser mFirebaseUser;
     private String mUserId;
     private String mUserEmail;
+    private Long mEndTimeInMillis;
+
     private String TAG = "BidOperationActivity";
 
     public static BidOperationFragment NewInstance(String productId, String auctionId) {
@@ -79,6 +83,14 @@ public class BidOperationFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.bidRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.activity_toolbar);
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        if (appCompatActivity != null) {
+            appCompatActivity.setSupportActionBar(toolbar);
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+
         mEditTextBid.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,6 +100,7 @@ public class BidOperationFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if (s.toString().trim().length() > 0) {
                     mButtonBidSubmit.setEnabled(true);
                 } else {

@@ -108,7 +108,7 @@ public class BuyProductListFragment extends Fragment implements AdapterView.OnIt
         View view = inflater.inflate(R.layout.fragment_buy_product_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.product_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mQuery = mDatabaseReference.orderByChild("productType").equalTo("iPhone");
+        mQuery = mDatabaseReference.orderByChild("productType").equalTo("Android");
         mSpinner = (Spinner) view.findViewById(R.id.products_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -150,6 +150,8 @@ public class BuyProductListFragment extends Fragment implements AdapterView.OnIt
                 viewHolder.bindView(product);
                 Picasso.with(getActivity())
                         .load(model.getPhotoUrl())
+                        .placeholder(R.drawable.ic_placeholder_image)
+                        .error(R.drawable.ic_error)
                         .into(viewHolder.mThumbnail);
 
 
